@@ -12,7 +12,7 @@ This is the companion repository to the Vue Advanced Workshop.
 1. Clone this repo:
 
   ``` bash
-  git clone https://github.com/yyx990803/vue-advanced-workshop.git
+  git clone
   ```
 
 2. Install dependencies (for automated tests):
