@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var state = {
+            count: 0,
+        };
+
+        function isObject(value){
+            return Object.prototype.toString.call(value) == '[object Object]';
+        }
+
+        function observe(obj){
+            if(!isObject(obj)){
+                return new Error(`${obj}不是对象`);
+            }
+            Object.keys(obj).forEach(key => {
+                let nowValue = obj[key];
+                let dep = new Dep();
+                Object.defineProperty(obj, key, {
+                    get(){
+                        //  收集
+                        dep.depend();
+                        return nowValue;
+                    },
+                    set(newValue){
+                        if(nowValue !== newValue){
+                            nowValue = newValue;
+                            dep.notify();
+                        }
+                    }
+                })
+            })
+        }        
+
+        const Dep = class {
+            constructor(){
+                this.subscribers = [];
+            }
+
+            depend(){
+                if(activeUpdate){
+                    // 添加到订阅者列表
+                    this.subscribers.push(activeUpdate);
+                }
+            }
+
+            notify(){
+                console.log('notify')
+                this.subscribers.forEach(subscriber => subscriber())
+            }
+        }
+
+        let activeUpdate;
+        function autoRun(update){
+            function wrapUpdate(){
+                update();
+                activeUpdate = null;
+            }
+            activeUpdate = wrapUpdate;
+        }
+        autoRun(() => {
+            document.body.innerText = state.count;
+        })
+
+        observe(state);
+        state.count++;
+
+        /*
+        发布订阅者模式、观察者模式
+        通过object.defineProperty()实现数据劫持，监听数据的get和set
+        当触发get方法时，说明这个数据被使用到，给他实例化一个dep，并且通过dep.depend添加订阅者到订阅者列表中
+        当触发set方法时，说明数据发生改变，通过dep.notify通知所有订阅者进行更新
+        */
+    </script>
+</body>
+</html>
