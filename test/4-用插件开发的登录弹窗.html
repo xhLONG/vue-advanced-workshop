@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="login">登录</button>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <script>
+        Vue.component('login-modal', {
+            template: `
+            <div v-if="show">
+                <h4>login</h4>
+                账号：<input></input>
+                密码：<input></input>
+            </div>
+            `,
+            data(){
+                return {
+                    show: false,
+                }
+            }
+        });
+        // const loginModal = {
+        //     template: `
+        //     <div v-if="show">
+        //         <h4>login</h4>
+        //         账号：<input></input>
+        //         密码：<input></input>
+        //     </div>
+        //     `,
+        //     data(){
+        //         return {
+        //             show: false,
+        //         }
+        //     }
+        // };
+
+        const loginPlugin = {
+            install(Vue){
+                const constructor = Vue.options.components['login-modal'];
+                // const constructor = Vue.extend(loginModal);
+                const instance = new constructor;
+                instance.$mount();
+                document.body.appendChild(instance.$el);
+                console.log(instance.show);
+
+                const login = {
+                    show(){
+                        instance.show = true;
+                    },
+                    hide(){
+                        instance.show = false;
+                    }
+                };
+
+                Vue.prototype.$login = login;
+            }
+        };
+
+        Vue.use(loginPlugin);
+
+        const vm = new Vue({
+            el: '#app',
+            data(){
+                return {
+                    msg: 'hello',
+                }
+            },
+            methods: {
+                login(){
+                    this.$login.show();
+                }
+            }
+        })
+    </script>
+</body>
+</html>
