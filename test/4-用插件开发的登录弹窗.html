@@ -80,6 +80,20 @@
                 }
             }
         })
+
+
+        /**
+         * Vue.extend()是利用一个对象作为参数返回一个Vue的子组件构造函数，new 子组件构造函数后会调用init()方式初始化实例对象，实例对象就可以使用$mount()方法
+         * Vue.component()实际上也是使用Vue.extend()方法
+         * 
+         * 
+         * Vue.component('modal', {
+         *  render(h){
+         *      这里h()的参数，有些地方是可以传入一个组件，有些则是render函数字符串，不太理解
+         *      return h('div', '弹窗');
+         *  }
+         * })
+        */
     </script>
 </body>
 </html>
